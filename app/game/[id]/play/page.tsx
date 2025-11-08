@@ -84,6 +84,27 @@ export default function PlayPage() {
     loadGame();
   }, [gameId, router]);
 
+  // Check if game is over when all cards are used
+  useEffect(() => {
+    if (usedQuestionIndices.size === cards.length && cards.length > 0) {
+      setTimeout(() => {
+        const result: GameResult = {
+          winner:
+            team1Score > team2Score
+              ? "team1"
+              : team2Score > team1Score
+              ? "team2"
+              : "tie",
+          team1Score,
+          team2Score,
+          team1Name,
+          team2Name,
+        };
+        setGameResult(result);
+      }, 500);
+    }
+  }, [usedQuestionIndices.size, cards.length, team1Score, team2Score, team1Name, team2Name]);
+
   function handleCardClick(index: number) {
     setSelectedCardIndex(index);
 
@@ -113,9 +134,6 @@ export default function PlayPage() {
 
       // Switch turn
       setCurrentTurn(prev => (prev === 1 ? 2 : 1));
-
-      // Check if game is over
-      checkGameOver(new Set(usedQuestionIndices).add(selectedCardIndex));
     }
 
     setShowTrickModal(false);
@@ -155,31 +173,6 @@ export default function PlayPage() {
     // Close modal
     setShowQuestionModal(false);
     setSelectedCardIndex(null);
-
-    // Check if game is over
-    checkGameOver(newUsedIndices);
-  }
-
-  function checkGameOver(usedIndices: Set<number>) {
-    // Game is over when all cards are used
-    if (usedIndices.size === cards.length) {
-      // Game is over
-      setTimeout(() => {
-        const result: GameResult = {
-          winner:
-            team1Score > team2Score
-              ? "team1"
-              : team2Score > team1Score
-              ? "team2"
-              : "tie",
-          team1Score,
-          team2Score,
-          team1Name,
-          team2Name,
-        };
-        setGameResult(result);
-      }, 500);
-    }
   }
 
   function handlePlayAgain() {
