@@ -50,11 +50,19 @@ export function QuestionCardGrid({
               "min-w-32 sm:min-w-40 md:min-w-48 lg:min-w-56",
               isUsed
                 ? "opacity-30 cursor-not-allowed bg-muted"
-                : "bg-gradient-to-br from-primary/10 to-secondary/10 hover:from-primary/20 hover:to-secondary/20"
+                : ""
             )}
+            style={!isUsed ? {
+              background: 'linear-gradient(to right, #6dd5ed, #2193b0)'
+            } : undefined}
             onClick={() => !isUsed && onCardClick(index)}
           >
-            <span className="text-2xl sm:text-3xl md:text-6xl font-bold">{index + 1}</span>
+            <span className={cn(
+              "text-2xl sm:text-3xl md:text-6xl font-bold",
+              isUsed ? "text-muted-foreground" : "text-white"
+            )}>
+              {index + 1}
+            </span>
           </Card>
         );
       })}
